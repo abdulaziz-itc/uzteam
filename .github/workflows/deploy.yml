@@ -5,13 +5,16 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+permissions:
+  contents: write # needed to publish the release asset
+
 concurrency:
   group: deploy-production
   cancel-in-progress: true
 
 jobs:
   build-deploy:
-    name: Build (CI) → Deploy (SSH)
+    name: Build (CI) → Release → Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -40,21 +43,36 @@ jobs:
           # Standalone bundle already contains its own minimal node_modules,
           # plus public/ and .next/static (copied by the postbuild script).
           cp -r drizzle scripts .next/standalone/
+          chmod +x .next/standalone/scripts/activate.sh
           tar -czf deploy.tar.gz -C .next/standalone .
           ls -lh deploy.tar.gz
 
+      # ── Always publish the artifact as a GitHub Release ────────────────
+      # The server can then pull it without SSH:
+      #   curl -sL -o deploy.tar.gz \
+      #     https://github.com/abdulaziz-itc/uzteam/releases/download/latest/deploy.tar.gz
+      - name: Publish release asset ("latest")
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          body: "Auto-built deploy bundle for commit ${{ github.sha }}"
+          files: deploy.tar.gz
+
+      # ── Optional direct SSH deploy (works once ahost enables external SSH) ──
       - name: Check deploy secrets
         id: check
         run: |
           if [ -z "${{ secrets.SSH_HOST }}" ] || [ -z "${{ secrets.DEPLOY_PATH }}" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::SSH_HOST and/or DEPLOY_PATH secrets are not configured — skipping deploy."
+            echo "::notice::SSH_HOST and/or DEPLOY_PATH secrets are not configured — skipping SSH deploy."
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Upload artifact to server
+      - name: Upload artifact to server (SSH)
         if: steps.check.outputs.configured == 'true'
+        continue-on-error: true # ahost external SSH is closed for now — release asset covers manual deploy
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -65,8 +83,10 @@ jobs:
           source: deploy.tar.gz
           target: ${{ secrets.DEPLOY_PATH }}
 
-      - name: Activate release on server
+      - name: Activate release on server (SSH)
+        id: ssh_activate
         if: steps.check.outputs.configured == 'true'
+        continue-on-error: true # see note above
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -90,21 +110,8 @@ jobs:
             tar -xzf deploy.tar.gz
             rm -f deploy.tar.gz
 
-            echo "── Loading DATABASE_URL from .env.local ──"
-            set -a; source ./.env.local; set +a
+            bash scripts/activate.sh
 
-            echo "── Applying DB schema (first run only) ──"
-            if [ "$(psql "$DATABASE_URL" -tAc "SELECT to_regclass('public.admin_users')")" = "" ]; then
-              psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f drizzle/0000_init.sql
-              echo "schema applied"
-            else
-              echo "schema already present — skipped"
-            fi
-
-            echo "── Seeding (idempotent) ──"
-            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/seed.sql
-
-            echo "── Restarting Passenger app ──"
-            mkdir -p tmp && touch tmp/restart.txt
-
-            echo "✅ Deploy finished"
+      - name: SSH deploy result notice
+        if: steps.check.outputs.configured == 'true' && steps.ssh_activate.outcome != 'success'
+        run: echo "::warning::SSH deploy failed or skipped — deploy manually from cPanel Terminal using the 'latest' release asset (see DEPLOYMENT.md)."
