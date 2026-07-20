@@ -41,7 +41,18 @@ jobs:
     needs: build-check
     runs-on: ubuntu-latest
     steps:
+      - name: Check deploy secrets
+        id: check
+        run: |
+          if [ -z "${{ secrets.SSH_HOST }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SSH secrets are not configured yet — skipping deploy step."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy on server
+        if: steps.check.outputs.configured == 'true'
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
