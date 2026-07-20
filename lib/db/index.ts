@@ -9,6 +9,12 @@ if (!connectionString) {
   console.warn('⚠️  DATABASE_URL is not set. Database queries will fail until it is configured.');
 }
 
+// Shared-hosting Postgres often requires SSL with a self-signed cert.
+// `?sslmode=require` in DATABASE_URL → connect with TLS, skip cert verification.
+const ssl = connectionString?.includes('sslmode=require')
+  ? { rejectUnauthorized: false }
+  : undefined;
+
 // Reuse a single pool across hot-reloads in dev.
 const globalForDb = globalThis as unknown as { __uzteamPool?: Pool };
 
@@ -16,6 +22,7 @@ const pool =
   globalForDb.__uzteamPool ??
   new Pool({
     connectionString,
+    ssl,
     max: 10,
     idleTimeoutMillis: 30_000,
   });
