@@ -49,9 +49,9 @@ export async function calculateEstimate(req: ParsedRequirements): Promise<Estima
   }
 
   // Integrations cost (assume ~30 hours per integration)
-  let integrationHours = req.integrations.length * 30;
+  const integrationHours = req.integrations.length * 30;
 
-  let developmentCost = (featureHours + integrationHours) * hourlyRate;
+  const developmentCost = (featureHours + integrationHours) * hourlyRate;
   total += developmentCost;
 
   // Multipliers

@@ -68,18 +68,36 @@ export async function POST(req: Request) {
         isRealtime: true,
         needsHighSecurity: false
       };
-      
+      const mockBr =
+        "### Mock Business Requirements\nThis is a mocked response because OPENAI_API_KEY is not set.\n\n**Features:**\n- Mock Feature 1\n- Mock Feature 2";
+
       const estimate = await calculateEstimate(mockRequirements);
-      
+
+      // Store the mock submission too, so the gate flow works end-to-end.
+      const [mockRow] = await db
+        .insert(calculatorSubmissions)
+        .values({
+          locale,
+          ipHash,
+          rawInputFeatures: features,
+          rawInputProblem: problem,
+          rawInputIntegrations: integrations,
+          generatedBrText: mockBr,
+          extractedTags: mockRequirements,
+          complexity: mockRequirements.complexity,
+          minPrice: String(estimate.minPrice),
+          maxPrice: String(estimate.maxPrice),
+          estimatedDays: estimate.estimatedDays,
+        })
+        .returning({ id: calculatorSubmissions.id });
+
       return NextResponse.json({
         success: true,
         tier1: {
-          br_summary: "### Mock Business Requirements\nThis is a mocked response because OPENAI_API_KEY is not set.\n\n**Features:**\n- Mock Feature 1\n- Mock Feature 2",
-          complexity: "Medium"
+          br_summary: mockBr,
+          complexity: mockRequirements.complexity,
         },
-        // We do not send tier2 data to the client until they submit the gate,
-        // but for now we store the calculation in DB and return the ID.
-        submission_id: 'mock-uuid'
+        submission_id: mockRow.id,
       });
     }
 

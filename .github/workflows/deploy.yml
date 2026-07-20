@@ -18,7 +18,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -44,9 +44,9 @@ jobs:
       - name: Check deploy secrets
         id: check
         run: |
-          if [ -z "${{ secrets.SSH_HOST }}" ]; then
+          if [ -z "${{ secrets.SSH_HOST }}" ] || [ -z "${{ secrets.DEPLOY_PATH }}" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::SSH secrets are not configured yet — skipping deploy step."
+            echo "::notice::SSH_HOST and/or DEPLOY_PATH secrets are not configured yet — skipping deploy step."
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
@@ -64,6 +64,12 @@ jobs:
           script: |
             set -e
             cd "${{ secrets.DEPLOY_PATH }}"
+
+            # cPanel Node.js apps keep node/npm in a nodevenv — activate it if present
+            for act in "$HOME"/nodevenv/*/*/bin/activate; do
+              if [ -f "$act" ]; then source "$act"; break; fi
+            done
+            echo "node: $(node -v 2>/dev/null || echo 'NOT FOUND') / npm: $(npm -v 2>/dev/null || echo 'NOT FOUND')"
 
             echo "── Pulling latest main ──"
             git fetch origin main
