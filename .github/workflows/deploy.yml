@@ -1,4 +1,4 @@
-name: Deploy to ahost
+name: Build & Deploy to ahost
 
 on:
   push:
@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-check:
-    name: Build check
+  build-deploy:
+    name: Build (CI) → Deploy (SSH)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,32 +26,46 @@ jobs:
 
       - name: Lint
         run: npm run lint
-        continue-on-error: true
 
-      - name: Build
+      - name: Build (standalone)
         run: npm run build
         env:
-          # Build does not need a real DB, but envs must exist
+          # Build never touches the DB, but envs must exist.
           DATABASE_URL: postgres://build:build@localhost:5432/build
-          JWT_SECRET: build-time-secret-not-used-in-runtime
-          NEXT_PUBLIC_APP_URL: https://example.com
+          JWT_SECRET: build-time-secret-not-used-at-runtime
+          NEXT_PUBLIC_APP_URL: https://uz-team.uz
 
-  deploy:
-    name: Deploy over SSH
-    needs: build-check
-    runs-on: ubuntu-latest
-    steps:
+      - name: Pack deploy artifact
+        run: |
+          # Standalone bundle already contains its own minimal node_modules,
+          # plus public/ and .next/static (copied by the postbuild script).
+          cp -r drizzle scripts .next/standalone/
+          tar -czf deploy.tar.gz -C .next/standalone .
+          ls -lh deploy.tar.gz
+
       - name: Check deploy secrets
         id: check
         run: |
           if [ -z "${{ secrets.SSH_HOST }}" ] || [ -z "${{ secrets.DEPLOY_PATH }}" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::SSH_HOST and/or DEPLOY_PATH secrets are not configured yet — skipping deploy step."
+            echo "::notice::SSH_HOST and/or DEPLOY_PATH secrets are not configured — skipping deploy."
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Deploy on server
+      - name: Upload artifact to server
+        if: steps.check.outputs.configured == 'true'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          source: deploy.tar.gz
+          target: ${{ secrets.DEPLOY_PATH }}
+
+      - name: Activate release on server
         if: steps.check.outputs.configured == 'true'
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -65,24 +79,30 @@ jobs:
             set -e
             cd "${{ secrets.DEPLOY_PATH }}"
 
-            # cPanel Node.js apps keep node/npm in a nodevenv — activate it if present
-            for act in "$HOME"/nodevenv/*/*/bin/activate; do
-              if [ -f "$act" ]; then source "$act"; break; fi
-            done
-            echo "node: $(node -v 2>/dev/null || echo 'NOT FOUND') / npm: $(npm -v 2>/dev/null || echo 'NOT FOUND')"
+            echo "── Cleaning previous release (keeps .env.local, tmp, logs) ──"
+            rm -rf .next node_modules public app components lib messages i18n \
+                   drizzle scripts .git server.js package.json package-lock.json \
+                   next.config.ts tsconfig.json proxy.ts eslint.config.mjs \
+                   postcss.config.mjs components.json README.md PROJECT.md DEPLOYMENT.md \
+                   AGENTS.md CLAUDE.md
 
-            echo "── Pulling latest main ──"
-            git fetch origin main
-            git reset --hard origin/main
+            echo "── Extracting new release ──"
+            tar -xzf deploy.tar.gz
+            rm -f deploy.tar.gz
 
-            echo "── Installing dependencies ──"
-            npm ci
+            echo "── Loading DATABASE_URL from .env.local ──"
+            set -a; source ./.env.local; set +a
 
-            echo "── Building ──"
-            npm run build
+            echo "── Applying DB schema (first run only) ──"
+            if [ "$(psql "$DATABASE_URL" -tAc "SELECT to_regclass('public.admin_users')")" = "" ]; then
+              psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f drizzle/0000_init.sql
+              echo "schema applied"
+            else
+              echo "schema already present — skipped"
+            fi
 
-            echo "── Applying DB migrations (if any) ──"
-            npm run db:migrate || echo "no migrations to apply"
+            echo "── Seeding (idempotent) ──"
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/seed.sql
 
             echo "── Restarting Passenger app ──"
             mkdir -p tmp && touch tmp/restart.txt

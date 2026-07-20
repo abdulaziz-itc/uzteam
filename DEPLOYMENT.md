@@ -1,15 +1,24 @@
 # UzTeam — Deploy yo'riqnomasi (ahost cPanel + GitHub Actions)
 
-## Arxitektura
+## Arxitektura (build-on-CI — serverda npm YO'Q)
+
+> ⚠️ ahost'da disk kvota kichik — `npm install` serverda ishlamaydi (EDQUOT -122).
+> Shu sabab **build GitHub Actions'da** bajariladi, serverga faqat tayyor
+> standalone paket (~12 MB tar.gz) yuklanadi. DB sxema/seed — tayyor SQL
+> fayllar bilan `psql` orqali qo'llanadi.
 
 ```
 GitHub (main push)
-   │  GitHub Actions (.github/workflows/deploy.yml)
-   ▼  SSH
-ahost server
-   ├─ ~/uzteam            # repo klon (yoki cPanel'dagi app papkasi)
-   ├─ PostgreSQL          # cPanel'da yaratilgan baza
-   └─ cPanel "Setup Node.js App" (Passenger) → domen
+   │  Actions: npm ci → build (standalone) → deploy.tar.gz (~12MB)
+   │  scp → ahost, ssh: extract + psql migratsiya + Passenger restart
+   ▼
+ahost server (DEPLOY_PATH=/home/uzteamuz/uzteam)
+   ├─ server.js            # Next standalone server (tarball ichidan)
+   ├─ node_modules/        # minimal traced deps (tarball ichidan)
+   ├─ .next/ public/       # build natijasi
+   ├─ drizzle/ scripts/    # SQL migratsiya + seed
+   ├─ .env.local           # DATABASE_URL... (qo'lda, bir marta)
+   └─ cPanel "Setup Node.js App" (Passenger, startup: server.js) → uz-team.uz
 ```
 
 ## 1. ahost'da bir martalik sozlash
@@ -60,40 +69,39 @@ GitHub Secrets:
 | `SSH_KEY` | privat kalit (to'liq matn) |
 | `DEPLOY_PATH` | masalan `/home/<user>/uzteam` |
 
-### 1.4 Birinchi deploy (qo'lda)
+### 1.4 Serverda bir martalik tayyorgarlik
+
+Faqat `.env.local` yaratish kifoya (kod Actions o'zi olib keladi):
 
 ```bash
-ssh <user>@<host>
-git clone https://github.com/abdulaziz-itc/uzteam.git ~/uzteam
-cd ~/uzteam
-npm ci
-npm run db:push && npm run db:seed   # birinchi marta
-npm run build
-# cPanel Node.js App'ni restart qiling (UI'da Restart tugmasi)
+mkdir -p ~/uzteam && cd ~/uzteam
+cat > .env.local <<'EOF'
+DATABASE_URL=postgres://<db_user>:<parol>@localhost:5432/<db_nomi>
+JWT_SECRET=<uzun random>
+NEXT_PUBLIC_APP_URL=https://uz-team.uz
+EOF
 ```
+
+Keyin GitHub'da **Actions → Build & Deploy → Run workflow** (yoki istalgan push).
 
 ## 2. Avto-deploy (GitHub Actions)
 
 `main`ga har push → `.github/workflows/deploy.yml`:
-1. SSH orqali serverga kiradi
-2. `git fetch && git reset --hard origin/main`
-3. `npm ci` (faqat lock o'zgargan bo'lsa tez)
-4. `npm run build`
-5. Passenger restart: `touch tmp/restart.txt` (yoki cloudlinux `cloudlinux-selector restart`)
-
-Workflow fayli allaqachon repoda — faqat Secrets to'ldirilsa ishlaydi.
+1. CI: `npm ci` → lint → `next build` (standalone) → `deploy.tar.gz` (~12 MB)
+2. `scp` bilan serverga yuklaydi
+3. SSH: eski release tozalanadi (`.env.local`, `tmp/`, `logs/` saqlanadi) → arxiv ochiladi
+4. `psql`: sxema (faqat birinchi marta) + seed (idempotent)
+5. Passenger restart: `touch tmp/restart.txt`
 
 ## 3. DB migratsiyalar (prod)
 
-Sxema o'zgarganda:
+Sxema o'zgarganda **lokalda**:
 ```bash
-# lokalda: migratsiya fayli yaratish
-npm run db:generate
+npm run db:generate        # drizzle/000N_*.sql yaratadi
 git add drizzle/ && git commit && git push
-# serverda (Actions buildidan keyin yoki qo'lda):
-npm run db:migrate
 ```
-> `db:push` dev uchun; prod'da `generate + migrate` tavsiya (tarix saqlanadi).
+Yangi SQL fayllarni serverda qo'llash uchun workflow'dagi schema bosqichini
+kengaytiring yoki qo'lda: `psql "$DATABASE_URL" -f drizzle/000N_*.sql`.
 
 ## 4. Tekshirish
 
