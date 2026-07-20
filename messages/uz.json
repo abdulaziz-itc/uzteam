@@ -1,0 +1,222 @@
+{
+  "Index": {
+    "badge": "IT biznes avtomatlashtirish va AI",
+    "title": "Biznesingizni boshqaradigan dasturiy ta'minot — ortiqcha qo'l mehnatisiz",
+    "description": "Biz ERP, CRM va MRP tizimlari hamda maxsus AI yordamchilarini loyihalaymiz va quramiz — qo'l mehnatini kamaytirib, jarayonlaringiz ustidan to'liq nazorat beradigan ishonchli vositalar.",
+    "cta_consultation": "Konsultatsiyaga yozilish",
+    "cta_portfolio": "Ishlarimizni ko'rish",
+    "cta_calculator": "Loyihani baholash"
+  },
+  "Navigation": {
+    "home": "Asosiy",
+    "services": "Xizmatlar",
+    "portfolio": "Portfolio",
+    "pricing": "Narxlar",
+    "blog": "Blog",
+    "about": "Biz haqimizda",
+    "contact": "Aloqa",
+    "calculator": "Kalkulyator",
+    "admin": "Admin"
+  },
+  "TechMarquee": {
+    "heading": "Ishonchli texnologiyalar asosida"
+  },
+  "Services": {
+    "heading": "Nimalar quramiz",
+    "subheading": "Jarayonlaringizga moslab loyihalangan amaliy avtomatlashtirish tizimlari — o'z vaqtida topshiriladi va uzoq xizmat qiladi.",
+    "flagship_title": "Maxsus AI yordamchilar",
+    "flagship_desc": "Kundalik ish jarayonlaringizga integratsiya qilingan aqlli agentlar: mijozlarga xizmat chatbotlari, ichki bilim yordamchilari, ovozli agentlar va hujjatlarni avtomatik qayta ishlash.",
+    "flagship_f1": "24/7 mijozlarga xizmat botlari",
+    "flagship_f2": "Ichki bilim yordamchilari",
+    "flagship_f3": "Ovozli AI agentlar",
+    "flagship_f4": "Hujjatlarni avtomatik qayta ishlash",
+    "erp_title": "ERP tizimlari",
+    "erp_desc": "Moliya, ombor, ishlab chiqarish va hisobotlar uchun yagona ishonchli manba.",
+    "crm_title": "CRM yechimlari",
+    "crm_desc": "Savdo voronkasi, mijozlar tarixi va eslatmalar — hammasi bir joyda.",
+    "mrp_title": "MRP dasturlari",
+    "mrp_desc": "Material va quvvatlarni aniq hisoblaydigan ishlab chiqarish rejalashtiruvi.",
+    "warehouse_title": "Ombor avtomatlashtiruvi",
+    "warehouse_desc": "Real vaqtdagi qoldiqlar, shtrix-kod jarayonlari va logistika kuzatuvi.",
+    "hr_title": "HR avtomatlashtiruvi",
+    "hr_desc": "Tartibli onboarding, ish haqi hisobi va samaradorlik boshqaruvi."
+  },
+  "Stats": {
+    "projects": "Topshirilgan loyihalar",
+    "years": "Yillik tajriba",
+    "clients": "Korporativ mijozlar",
+    "uptime": "Tizim ishonchliligi"
+  },
+  "Process": {
+    "heading": "Qanday ishlaymiz",
+    "subheading": "Aniq, bosqichma-bosqich jarayon — nima va nega qilinayotganini doim bilasiz.",
+    "s1_title": "Tahlil",
+    "s1_desc": "Joriy jarayonlaringizni o'rganib, avtomatlashtirish real foyda beradigan nuqtalarni aniqlaymiz.",
+    "s2_title": "Loyihalash",
+    "s2_desc": "Arxitekturani belgilab, jamoangiz bemalol ishlata oladigan interfeyslar chizamiz.",
+    "s3_title": "Ishlab chiqish",
+    "s3_desc": "Qisqa sikllarda bosqichma-bosqich topshirish — natijani erta ko'rib borasiz.",
+    "s4_title": "Integratsiya",
+    "s4_desc": "Ehtiyotkor joriy etish va siz ishlatayotgan vositalar bilan bog'lash.",
+    "s5_title": "Qo'llab-quvvatlash",
+    "s5_desc": "Ishga tushgandan keyin monitoring, texnik xizmat va doimiy yaxshilashlar."
+  },
+  "CTA": {
+    "heading": "Jarayonlaringizni zamonaviylashtirishga tayyormisiz?",
+    "subheading": "Jarayonlaringiz haqida aytib bering — amaliy avtomatlashtirish rejasi va real byudjet taklif qilamiz.",
+    "primary": "Konsultatsiyaga yozilish",
+    "secondary": "Loyihani baholash"
+  },
+  "Footer": {
+    "tagline": "Ishonchlilikni qadrlaydigan kompaniyalar uchun ERP, CRM, MRP tizimlari va maxsus AI yordamchilarini quramiz.",
+    "company": "Kompaniya",
+    "services": "Xizmatlar",
+    "erp": "ERP tizimlari",
+    "crm": "CRM yechimlari",
+    "ai": "AI yordamchilar",
+    "calculator": "Loyiha kalkulyatori",
+    "rights": "Barcha huquqlar himoyalangan."
+  },
+  "Chat": {
+    "title": "UzTeam yordamchisi",
+    "status": "Onlayn",
+    "empty_l1": "Xizmatlar, narxlar yoki loyiha",
+    "empty_l2": "narxini baholash haqida so'rang.",
+    "placeholder": "Xabaringizni yozing…"
+  },
+  "PortfolioPage": {
+    "title": "Tanlangan ishlar",
+    "subtitle": "Mijozlarimiz uchun loyihalab, qurib, topshirgan tizimlarimiz.",
+    "empty": "Keys-stadilar tayyorlanmoqda. Hozircha loyihangiz haqida yozing — qo'ng'iroqda mos misollarni ko'rsatamiz.",
+    "cta": "Loyihani muhokama qilish"
+  },
+  "PricingPage": {
+    "title": "Narxlar",
+    "subtitle": "Shaffof hamkorlik modellari. Har bir loyihaga batafsil, moddalab hisoblangan taklif beriladi.",
+    "empty_title": "Har bir loyiha alohida baholanadi",
+    "empty_desc": "Byudjet hajm, integratsiyalar va muddatga bog'liq. Ikki daqiqada real oraliqni bilish uchun kalkulyatordan foydalaning yoki qo'ng'iroqqa yoziling.",
+    "cta_calculator": "Loyihani baholash",
+    "cta_contact": "Konsultatsiyaga yozilish",
+    "popular": "Ommabop"
+  },
+  "BlogPage": {
+    "title": "Maqolalar va yangiliklar",
+    "subtitle": "Avtomatlashtirish, AI va dasturiy loyihalarni yuritish bo'yicha amaliy qaydlar.",
+    "empty": "Maqolalar yo'lda. Kuzatib boring — ilk postlar tez orada shu yerda chiqadi.",
+    "read_more": "Batafsil"
+  },
+  "AboutPage": {
+    "title": "UzTeam haqida",
+    "subtitle": "Biznes avtomatlashtirishga ixtisoslashgan muhandislar jamoasi — amaliy, ishonchli, uzoq muddatli.",
+    "mission_title": "Bizning yondashuv",
+    "mission_desc": "Yaxshi dasturiy ta'minot o'z ishini jimgina bajarishi kerak: kamroq qo'l mehnati, kamroq xato, qarorlar uchun aniq raqamlar. Biz demo emas — kompaniyalar yillar davomida tayanadigan tizimlar quramiz.",
+    "v1_title": "Amaliylik",
+    "v1_desc": "Avtomatlashtirish mumkin bo'lgan hamma narsani emas, o'lchanadigan foyda keltiradiganini avtomatlashtiramiz.",
+    "v2_title": "Ishonchlilik",
+    "v2_desc": "Muhim joylarda sinalgan texnologiyalar. Ishga tushgandan keyin monitoring va qo'llab-quvvatlash.",
+    "v3_title": "Hamkorlik",
+    "v3_desc": "Biznesingiz tilida gaplashamiz va natija uchun mas'uliyatni o'z zimmamizga olamiz.",
+    "team_title": "Jamoa"
+  },
+  "ContactPage": {
+    "title": "Biz bilan bog'laning",
+    "subtitle": "Jarayonlaringiz haqida yozing — odatda bir ish kuni ichida javob beramiz.",
+    "form_name": "Ismingiz",
+    "form_email": "Email",
+    "form_phone": "Telefon",
+    "form_company": "Kompaniya",
+    "form_message": "Vazifa yoki savolingizni yozing",
+    "form_submit": "Xabar yuborish",
+    "form_sending": "Yuborilmoqda…",
+    "form_success": "Rahmat! Xabaringiz yuborildi — tez orada siz bilan bog'lanamiz.",
+    "form_error": "Xatolik yuz berdi. Qayta urinib ko'ring yoki to'g'ridan-to'g'ri email yozing.",
+    "info_title": "Kontaktlar",
+    "info_address": "Manzil",
+    "info_phone": "Telefon",
+    "info_email": "Email"
+  },
+  "Calculator": {
+    "title": "Loyiha kalkulyatori",
+    "subtitle": "G'oyangizni yozing — AI talablarni tartibga solib, real byudjet oralig'i va muddatni hisoblab beradi.",
+    "step_label": "3 bosqichdan {n}-si",
+    "s1_title": "Asosiy funksiyalar",
+    "s1_desc": "Mahsulotingiz bajarishi kerak bo'lgan 1–3 ta asosiy vazifani yozing.",
+    "s1_placeholder": "Masalan: ijtimoiy tarmoqlardan lidlarni yig'ib, ularni sotuv menejerlariga avtomatik biriktiradigan CRM…",
+    "s2_title": "Muammo",
+    "s2_desc": "Bu mahsulot biznesingizning qaysi muammosini hal qiladi?",
+    "s2_placeholder": "Masalan: Telegram va WhatsApp'dagi mijoz so'rovlarini yo'qotib qo'yamiz, bu sotuvlarni kamaytiradi…",
+    "s3_title": "Integratsiyalar",
+    "s3_desc": "Mahsulot ulanishi kerak bo'lgan tashqi tizimlarni tanlang.",
+    "s3_other": "Boshqa integratsiyalar (masalan, Google Sheets, maxsus API'lar)",
+    "back": "Orqaga",
+    "next": "Keyingisi",
+    "analyze": "Tahlil qilish va hisoblash",
+    "analyzing_title": "Talablar tahlil qilinmoqda…",
+    "analyzing_desc": "Xulosa tuzilib, baho hisoblanmoqda",
+    "results_title": "Tahlil yakunlandi",
+    "complexity": "Murakkablik",
+    "br_title": "Biznes talablar xulosasi",
+    "unlock_title": "To'liq bahoni oching",
+    "unlock_desc": "Narx oralig'i, muddat va to'liq talablar hujjatini oling.",
+    "gate_name": "Ismingiz *",
+    "gate_email": "Ish emaili *",
+    "gate_phone": "Telefon (ixtiyoriy)",
+    "gate_company": "Kompaniya (ixtiyoriy)",
+    "unlock_btn": "Narx va muddatni ochish",
+    "unlocking": "Ochilmoqda…",
+    "cost_label": "Taxminiy ishlab chiqish narxi",
+    "timeline_label": "Taxminiy muddat",
+    "days": "ish kuni",
+    "download_pdf": "Xulosani yuklab olish (PDF)",
+    "disclaimer": "* UI/UX dizayn, QA va ishga tushirilgandan keyingi qo'llab-quvvatlash kirmaydi. Aniq taklif batafsil texnik suhbatdan keyin beriladi."
+  },
+  "Hero": {
+    "email_placeholder": "Email manzilingiz",
+    "email_cta": "Taklif olish",
+    "email_success": "Rahmat! Tez orada siz bilan bog'lanamiz.",
+    "or": "yoki",
+    "secondary_cta": "Loyihani baholash"
+  },
+  "FeatureTrio": {
+    "heading": "G'oyadan ishlaydigan tizimgacha",
+    "subheading": "Oddiy va shaffof yo'l — murakkab atamalarsiz, kutilmagan xarajatlarsiz.",
+    "t1_title": "Tahlil va reja",
+    "t1_desc": "Jarayonlaringizni o'rganib, aniq byudjetli amaliy avtomatlashtirish rejasini taklif qilamiz.",
+    "t2_title": "Ishlab chiqish",
+    "t2_desc": "Qisqa bosqichlar — ilk haftalardanoq ko'rib, sinab boradigan ishlaydigan dastur.",
+    "t3_title": "Ishga tushirish va qo'llab-quvvatlash",
+    "t3_desc": "Ehtiyotkor joriy etish, jamoani o'qitish, monitoring va doimiy yaxshilashlar."
+  },
+  "Flagship": {
+    "badge": "Flagman xizmat",
+    "learn_more": "Batafsil"
+  },
+  "ProductShot": {
+    "heading": "Jamoangiz haqiqatan ishlatadigan dashboardlar",
+    "subheading": "Toza interfeyslar, jonli raqamlar va savollarga javob beradigan hisobotlar — tizimlarimiz ichkaridan shunday ko'rinadi."
+  },
+  "PricingPreview": {
+    "heading": "Boshlang'ich narxlar",
+    "subheading": "Har bir loyiha o'ziga xos — bu tariflar byudjet odatda qayerdan boshlanishini ko'rsatadi.",
+    "from": "dan boshlab",
+    "p1_title": "Start",
+    "p1_desc": "Landing, kichik avtomatlashtirish yoki bitta jarayon uchun Telegram bot.",
+    "p2_title": "Biznes",
+    "p2_desc": "CRM/ERP moduli, integratsiyalar va o'sayotgan jamoa uchun admin panel.",
+    "p3_title": "Korporativ",
+    "p3_desc": "To'liq tizim: ko'p modullar, rollar, hisobotlar va AI yordamchilar.",
+    "cta": "Aniq baho olish",
+    "popular": "Ommabop"
+  },
+  "Testimonial": {
+    "heading": "Mijozlar fikri",
+    "quote": "UzTeam buyurtma jarayonimizni jadvallardan yagona tizimga o'tkazdi. Jamoa endi ikki barobar hajmni kamroq xato bilan qayta ishlaydi — va nihoyat har kuni ertalab haqiqiy raqamlarni ko'ramiz.",
+    "author": "Aziz Rahimov",
+    "role": "Operatsion direktor, distributsiya kompaniyasi"
+  },
+  "CTABand": {
+    "heading": "Jamoangiz vaqtini yeb qo'yayotgan jarayon bormi?",
+    "subheading": "Bizga aytib bering — bir ish kuni ichida javob beramiz.",
+    "cta": "Bog'lanish"
+  }
+}

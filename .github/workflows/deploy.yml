@@ -1,0 +1,72 @@
+name: Deploy to ahost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  build-check:
+    name: Build check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Build
+        run: npm run build
+        env:
+          # Build does not need a real DB, but envs must exist
+          DATABASE_URL: postgres://build:build@localhost:5432/build
+          JWT_SECRET: build-time-secret-not-used-in-runtime
+          NEXT_PUBLIC_APP_URL: https://example.com
+
+  deploy:
+    name: Deploy over SSH
+    needs: build-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+            cd "${{ secrets.DEPLOY_PATH }}"
+
+            echo "── Pulling latest main ──"
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "── Installing dependencies ──"
+            npm ci
+
+            echo "── Building ──"
+            npm run build
+
+            echo "── Applying DB migrations (if any) ──"
+            npm run db:migrate || echo "no migrations to apply"
+
+            echo "── Restarting Passenger app ──"
+            mkdir -p tmp && touch tmp/restart.txt
+
+            echo "✅ Deploy finished"

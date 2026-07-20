@@ -1,0 +1,222 @@
+{
+  "Index": {
+    "badge": "IT Business Automation & AI",
+    "title": "Software that runs your business, not the other way around",
+    "description": "We design and build ERP, CRM and MRP systems, and custom AI assistants — reliable tools that reduce manual work and give you full visibility over your operations.",
+    "cta_consultation": "Book a consultation",
+    "cta_portfolio": "See our work",
+    "cta_calculator": "Estimate your project"
+  },
+  "Navigation": {
+    "home": "Home",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "calculator": "Calculator",
+    "admin": "Admin"
+  },
+  "TechMarquee": {
+    "heading": "Built with proven technologies"
+  },
+  "Services": {
+    "heading": "What we build",
+    "subheading": "Practical automation systems designed around your processes — delivered on time and built to last.",
+    "flagship_title": "Custom AI Assistants",
+    "flagship_desc": "Intelligent agents integrated into your daily operations: customer support chatbots, internal knowledge copilots, voice agents and document-processing automation.",
+    "flagship_f1": "24/7 customer support bots",
+    "flagship_f2": "Internal knowledge copilots",
+    "flagship_f3": "Voice AI agents",
+    "flagship_f4": "Automated document processing",
+    "erp_title": "ERP Systems",
+    "erp_desc": "A single source of truth for finance, inventory, production and reporting.",
+    "crm_title": "CRM Solutions",
+    "crm_desc": "Sales pipelines, client history and follow-ups organised in one place.",
+    "mrp_title": "MRP Software",
+    "mrp_desc": "Production planning with accurate material and capacity calculations.",
+    "warehouse_title": "Warehouse Automation",
+    "warehouse_desc": "Real-time stock levels, barcode workflows and logistics tracking.",
+    "hr_title": "HR Automation",
+    "hr_desc": "Structured onboarding, payroll and performance management."
+  },
+  "Stats": {
+    "projects": "Projects delivered",
+    "years": "Years of experience",
+    "clients": "Enterprise clients",
+    "uptime": "System uptime"
+  },
+  "Process": {
+    "heading": "How we work",
+    "subheading": "A clear, staged process — you always know what is being done and why.",
+    "s1_title": "Discovery",
+    "s1_desc": "We study your current processes and identify where automation brings measurable value.",
+    "s2_title": "Design",
+    "s2_desc": "We define the architecture and design interfaces your team will actually enjoy using.",
+    "s3_title": "Development",
+    "s3_desc": "Iterative delivery in short cycles, with working software you can review early.",
+    "s4_title": "Integration",
+    "s4_desc": "Careful rollout and integration with the tools you already rely on.",
+    "s5_title": "Support",
+    "s5_desc": "Monitoring, maintenance and continuous improvements after launch."
+  },
+  "CTA": {
+    "heading": "Ready to modernise your operations?",
+    "subheading": "Tell us about your processes — we will suggest a practical automation plan and a realistic budget.",
+    "primary": "Book a consultation",
+    "secondary": "Estimate your project"
+  },
+  "Footer": {
+    "tagline": "We build ERP, CRM and MRP systems, and custom AI assistants for companies that value reliability.",
+    "company": "Company",
+    "services": "Services",
+    "erp": "ERP Systems",
+    "crm": "CRM Solutions",
+    "ai": "AI Assistants",
+    "calculator": "Project Calculator",
+    "rights": "All rights reserved."
+  },
+  "Chat": {
+    "title": "UzTeam Assistant",
+    "status": "Online",
+    "empty_l1": "Ask about our services, pricing,",
+    "empty_l2": "or estimating your project cost.",
+    "placeholder": "Type your message…"
+  },
+  "PortfolioPage": {
+    "title": "Selected work",
+    "subtitle": "Systems we have designed, built and shipped for our clients.",
+    "empty": "Case studies are being prepared. Meanwhile, tell us about your project — we will show relevant examples on a call.",
+    "cta": "Discuss your project"
+  },
+  "PricingPage": {
+    "title": "Pricing",
+    "subtitle": "Transparent engagement models. Every project gets a detailed, itemised quote.",
+    "empty_title": "Every project is priced individually",
+    "empty_desc": "The budget depends on scope, integrations and timeline. Use the estimator to get a realistic range in two minutes, or book a call.",
+    "cta_calculator": "Estimate your project",
+    "cta_contact": "Book a consultation",
+    "popular": "Popular"
+  },
+  "BlogPage": {
+    "title": "Insights & news",
+    "subtitle": "Practical notes on automation, AI and running software projects.",
+    "empty": "Articles are on the way. Follow us — the first posts will appear here soon.",
+    "read_more": "Read more"
+  },
+  "AboutPage": {
+    "title": "About UzTeam",
+    "subtitle": "An engineering team focused on business automation — pragmatic, reliable, long-term.",
+    "mission_title": "What we believe",
+    "mission_desc": "Good software should quietly do its job: fewer manual steps, fewer errors, clear numbers for decisions. We build systems companies rely on for years — not demos.",
+    "v1_title": "Practicality",
+    "v1_desc": "We automate what brings measurable value — not everything that can be automated.",
+    "v2_title": "Reliability",
+    "v2_desc": "Boring, proven technology where it matters. Monitoring and support after launch.",
+    "v3_title": "Partnership",
+    "v3_desc": "We speak the language of your business and stay responsible for the result.",
+    "team_title": "Team"
+  },
+  "ContactPage": {
+    "title": "Contact us",
+    "subtitle": "Tell us about your processes — we usually reply within one business day.",
+    "form_name": "Your name",
+    "form_email": "Email",
+    "form_phone": "Phone",
+    "form_company": "Company",
+    "form_message": "Describe your task or question",
+    "form_submit": "Send message",
+    "form_sending": "Sending…",
+    "form_success": "Thank you! Your message has been sent — we will get back to you shortly.",
+    "form_error": "Something went wrong. Please try again or email us directly.",
+    "info_title": "Contacts",
+    "info_address": "Address",
+    "info_phone": "Phone",
+    "info_email": "Email"
+  },
+  "Calculator": {
+    "title": "Project estimator",
+    "subtitle": "Describe your idea — AI structures the requirements and calculates a realistic budget range and timeline.",
+    "step_label": "Step {n} of 3",
+    "s1_title": "Core functionality",
+    "s1_desc": "Describe 1–3 main things your product should do.",
+    "s1_placeholder": "e.g. A CRM that captures leads from social media and assigns them to sales reps automatically…",
+    "s2_title": "The problem",
+    "s2_desc": "What problem does this solve for your business?",
+    "s2_placeholder": "e.g. We lose track of customer requests in Telegram and WhatsApp, which costs us sales…",
+    "s3_title": "Integrations",
+    "s3_desc": "Select the external systems your product needs to connect with.",
+    "s3_other": "Other integrations (e.g. Google Sheets, specific APIs)",
+    "back": "Back",
+    "next": "Next",
+    "analyze": "Analyze & calculate",
+    "analyzing_title": "Analyzing requirements…",
+    "analyzing_desc": "Structuring the summary and calculating the estimate",
+    "results_title": "Analysis complete",
+    "complexity": "Complexity",
+    "br_title": "Business requirements summary",
+    "unlock_title": "Unlock the full estimate",
+    "unlock_desc": "Get the price range, timeline and the full requirements document.",
+    "gate_name": "Your name *",
+    "gate_email": "Work email *",
+    "gate_phone": "Phone (optional)",
+    "gate_company": "Company (optional)",
+    "unlock_btn": "Unlock pricing & timeline",
+    "unlocking": "Unlocking…",
+    "cost_label": "Estimated development cost",
+    "timeline_label": "Estimated timeline",
+    "days": "business days",
+    "download_pdf": "Download summary (PDF)",
+    "disclaimer": "* Excludes UI/UX design, QA and post-launch support. An exact quote follows a detailed technical call."
+  },
+  "Hero": {
+    "email_placeholder": "Enter your email",
+    "email_cta": "Get a proposal",
+    "email_success": "Thank you! We will contact you shortly.",
+    "or": "or",
+    "secondary_cta": "Estimate your project"
+  },
+  "FeatureTrio": {
+    "heading": "From idea to a working system",
+    "subheading": "A simple, transparent path — no jargon, no surprises.",
+    "t1_title": "Analysis & plan",
+    "t1_desc": "We study your processes and propose a practical automation plan with a clear budget.",
+    "t2_title": "Development",
+    "t2_desc": "Short iterations with working software you can see and test from the early weeks.",
+    "t3_title": "Launch & support",
+    "t3_desc": "Careful rollout, team training, monitoring and improvements after go-live."
+  },
+  "Flagship": {
+    "badge": "Flagship service",
+    "learn_more": "Learn more"
+  },
+  "ProductShot": {
+    "heading": "Dashboards your team will actually use",
+    "subheading": "Clean interfaces, live numbers, and reports that answer questions — this is what our systems look like inside."
+  },
+  "PricingPreview": {
+    "heading": "Simple starting prices",
+    "subheading": "Every project is unique — these tiers show where budgets typically start.",
+    "from": "from",
+    "p1_title": "Start",
+    "p1_desc": "Landing, small automation or a Telegram bot for one process.",
+    "p2_title": "Business",
+    "p2_desc": "CRM/ERP module, integrations and an admin panel for a growing team.",
+    "p3_title": "Enterprise",
+    "p3_desc": "Full-scale system: multiple modules, roles, reporting and AI assistants.",
+    "cta": "Get an exact estimate",
+    "popular": "Popular"
+  },
+  "Testimonial": {
+    "heading": "What clients say",
+    "quote": "UzTeam rebuilt our order workflow from spreadsheets into a single system. The team now processes twice the volume with fewer mistakes — and we finally see real numbers every morning.",
+    "author": "Aziz Rahimov",
+    "role": "Operations director, distribution company"
+  },
+  "CTABand": {
+    "heading": "Have a process that eats your team's time?",
+    "subheading": "Tell us about it — we will reply within one business day.",
+    "cta": "Get in touch"
+  }
+}
