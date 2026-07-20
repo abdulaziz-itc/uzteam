@@ -12,7 +12,6 @@ export default function PricingPreview() {
     {
       icon: Rocket,
       title: t('p1_title'),
-      price: '$5,000',
       desc: t('p1_desc'),
       accent: 'text-emerald-500',
       highlighted: false,
@@ -20,7 +19,6 @@ export default function PricingPreview() {
     {
       icon: Shield,
       title: t('p2_title'),
-      price: '$12,000',
       desc: t('p2_desc'),
       accent: 'text-primary',
       highlighted: true,
@@ -28,7 +26,6 @@ export default function PricingPreview() {
     {
       icon: Building2,
       title: t('p3_title'),
-      price: '$25,000',
       desc: t('p3_desc'),
       accent: 'text-orange-500',
       highlighted: false,
@@ -47,7 +44,7 @@ export default function PricingPreview() {
         </div>
 
         <div className="mx-auto grid max-w-4xl grid-cols-1 items-center gap-6 md:grid-cols-3">
-          {tiers.map(({ icon: Icon, title, price, desc, accent, highlighted }, idx) => (
+          {tiers.map(({ icon: Icon, title, desc, accent, highlighted }, idx) => (
             <motion.div
               key={title}
               initial={{ opacity: 0, y: 16 }}
@@ -64,11 +61,7 @@ export default function PricingPreview() {
                 </span>
               )}
               <Icon className={`mb-4 h-9 w-9 ${accent}`} />
-              <h3 className="mb-1 text-lg font-semibold text-foreground">{title}</h3>
-              <div className="mb-3">
-                <span className="text-xs text-muted-foreground">{t('from')} </span>
-                <span className="text-3xl font-bold tracking-tight text-foreground">{price}</span>
-              </div>
+              <h3 className="mb-3 text-lg font-semibold text-foreground">{title}</h3>
               <p className="mb-6 text-sm leading-relaxed text-muted-foreground">{desc}</p>
               <Link
                 href="/calculator"
