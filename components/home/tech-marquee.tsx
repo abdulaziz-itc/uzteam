@@ -3,9 +3,9 @@
 import { useTranslations } from 'next-intl';
 
 const technologies = [
-  'Python', 'Node.js', 'PostgreSQL', 'Next.js', 'React', 'TypeScript',
-  '1C Enterprise', 'Telegram API', 'OpenAI', 'Anthropic Claude',
-  'TailwindCSS', 'Docker', 'AWS', 'Kubernetes', 'Redis', 'Nginx',
+  'SAP', 'Odoo', '1C Enterprise', 'Microsoft Dynamics 365', 'Oracle NetSuite',
+  'Salesforce', 'Bitrix24', 'amoCRM', 'Zoho', 'SAP Business One',
+  'Telegram API', 'OpenAI', 'PostgreSQL', 'Payme', 'Click',
 ];
 
 export default function TechMarquee() {
