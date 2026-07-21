@@ -170,7 +170,10 @@
     "download_pdf": "Download summary (PDF)",
     "disclaimer": "* Excludes UI/UX design, QA and post-launch support. An exact quote follows a detailed technical call.",
     "t2_title": "Your request has been received!",
-    "t2_desc": "We've sent a confirmation to your email. Our team will review the requirements and contact you with an exact proposal within one business day."
+    "t2_desc": "We've sent a confirmation to your email. Our team will review the requirements and contact you with an exact proposal within one business day.",
+    "complexity_low": "Low",
+    "complexity_medium": "Medium",
+    "complexity_high": "High"
   },
   "Hero": {
     "email_placeholder": "Enter your email",

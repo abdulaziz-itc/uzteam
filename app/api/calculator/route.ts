@@ -10,6 +10,87 @@ import crypto from 'crypto';
 
 export const runtime = 'nodejs';
 
+// ─── Fallback analysis (no AI key / AI failure) ────────────────────────
+// Builds a clean, professional BR summary in the user's language from their
+// OWN inputs — users must never see any "mock/AI unavailable" wording.
+
+const FALLBACK_STRINGS = {
+  uz: {
+    goal: 'Loyiha maqsadi',
+    features: 'Rejalashtirilgan asosiy imkoniyatlar',
+    integrations: 'Tashqi integratsiyalar',
+    none: 'Dastlabki bosqichda talab qilinmaydi',
+    outro:
+      "Ushbu xulosa siz kiritgan ma'lumotlar asosida tuzildi. Mutaxassislarimiz talablarni batafsil o'rganib, texnik yechim va aniq taklifni tayyorlaydi.",
+  },
+  ru: {
+    goal: 'Цель проекта',
+    features: 'Планируемые ключевые возможности',
+    integrations: 'Внешние интеграции',
+    none: 'На первом этапе не требуются',
+    outro:
+      'Это резюме составлено на основе введённых вами данных. Наши специалисты детально изучат требования и подготовят техническое решение с точным предложением.',
+  },
+  en: {
+    goal: 'Project goal',
+    features: 'Planned key capabilities',
+    integrations: 'External integrations',
+    none: 'Not required at the first stage',
+    outro:
+      'This summary is based on the information you provided. Our specialists will study the requirements in detail and prepare a technical solution with an exact proposal.',
+  },
+} as const;
+
+function splitItems(raw: string): string[] {
+  return String(raw || '')
+    .split(/[\n;,•]+/)
+    .map((s) => s.trim().replace(/^[-–—*]\s*/, ''))
+    .filter((s) => s.length > 1)
+    .slice(0, 8);
+}
+
+function buildFallbackAnalysis(
+  features: string,
+  problem: string,
+  integrations: string,
+  locale: string,
+) {
+  const lang = (['uz', 'ru', 'en'] as const).includes(locale as 'uz')
+    ? (locale as 'uz' | 'ru' | 'en')
+    : 'uz';
+  const s = FALLBACK_STRINGS[lang];
+
+  const featureList = splitItems(features);
+  const integrationList = splitItems(integrations);
+
+  // Simple deterministic complexity heuristic.
+  const score = featureList.length + integrationList.length * 2;
+  const complexity: 'Low' | 'Medium' | 'High' = score <= 3 ? 'Low' : score <= 7 ? 'Medium' : 'High';
+
+  const brParts: string[] = [];
+  if (problem?.trim()) brParts.push(`${s.goal}:\n${problem.trim()}`);
+  brParts.push(
+    `${s.features}:\n${(featureList.length ? featureList : [features]).map((f) => `• ${f}`).join('\n')}`,
+  );
+  brParts.push(
+    `${s.integrations}:\n${integrationList.length ? integrationList.map((i) => `• ${i}`).join('\n') : s.none}`,
+  );
+  brParts.push(s.outro);
+
+  return {
+    br: brParts.join('\n\n'),
+    requirements: {
+      complexity,
+      features: featureList.length ? featureList : [String(features).slice(0, 120)],
+      integrations: integrationList,
+      isRealtime: /realtime|real-time|jonli|чат|chat|websocket/i.test(features + ' ' + problem),
+      needsHighSecurity: /payment|to'lov|оплат|bank|karta|card/i.test(
+        features + ' ' + integrations,
+      ),
+    },
+  };
+}
+
 // The schema matching the required LLM output
 const CalculatorSchema = z.object({
   br_summary_text: z.string().describe('The generated Business Requirements summary text, formatted beautifully in Markdown.'),
@@ -58,75 +139,57 @@ export async function POST(req: Request) {
       await db.insert(calculatorRateLimits).values({ ipHash });
     }
 
-    // Mock Mode Check (If no OPENAI API key is set)
-    if (!process.env.OPENAI_API_KEY) {
-      console.warn("MOCK MODE ENABLED: No OPENAI_API_KEY set.");
-      const mockRequirements = {
-        complexity: 'Medium' as const,
-        features: ['Mock Feature 1', 'Mock Feature 2'],
-        integrations: ['Stripe', 'Twilio'],
-        isRealtime: true,
-        needsHighSecurity: false
-      };
-      const mockBr =
-        "### Mock Business Requirements\nThis is a mocked response because OPENAI_API_KEY is not set.\n\n**Features:**\n- Mock Feature 1\n- Mock Feature 2";
+    // Analyze the request: AI when available, clean deterministic fallback otherwise.
+    let br: string;
+    let requirements: {
+      complexity: 'Low' | 'Medium' | 'High';
+      features: string[];
+      integrations: string[];
+      isRealtime: boolean;
+      needsHighSecurity: boolean;
+    };
 
-      const estimate = await calculateEstimate(mockRequirements);
+    if (process.env.OPENAI_API_KEY) {
+      try {
+        const { object: llmResult } = await generateObject({
+          model: openai('gpt-4o-mini'),
+          schema: CalculatorSchema,
+          prompt: `
+            You are a senior Business Analyst at UzTeam, an IT Business Automation company.
+            A potential client has described their product idea.
+            Your task is to analyze the input, generate a concise and professional Business Requirements (BR) summary in ${locale === 'uz' ? 'Uzbek' : locale === 'ru' ? 'Russian' : 'English'}, and extract strict JSON metadata.
 
-      // Store the mock submission too, so the gate flow works end-to-end.
-      const [mockRow] = await db
-        .insert(calculatorSubmissions)
-        .values({
-          locale,
-          ipHash,
-          rawInputFeatures: features,
-          rawInputProblem: problem,
-          rawInputIntegrations: integrations,
-          generatedBrText: mockBr,
-          extractedTags: mockRequirements,
-          complexity: mockRequirements.complexity,
-          minPrice: String(estimate.minPrice),
-          maxPrice: String(estimate.maxPrice),
-          estimatedDays: estimate.estimatedDays,
-        })
-        .returning({ id: calculatorSubmissions.id });
+            DO NOT include pricing or timelines in the BR text.
+            Write the BR summary as plain text (no markdown symbols like ### or **).
 
-      return NextResponse.json({
-        success: true,
-        tier1: {
-          br_summary: mockBr,
-          complexity: mockRequirements.complexity,
-        },
-        submission_id: mockRow.id,
-      });
+            <user_query>
+            Core Functionalities: ${features}
+            Problem Solved: ${problem}
+            Needed Integrations: ${integrations}
+            </user_query>
+          `,
+        });
+        br = llmResult.br_summary_text;
+        requirements = {
+          complexity: llmResult.complexity,
+          features: llmResult.features,
+          integrations: llmResult.integrations,
+          isRealtime: llmResult.isRealtime,
+          needsHighSecurity: llmResult.needsHighSecurity,
+        };
+      } catch (aiError) {
+        console.error('AI analysis failed — using fallback:', aiError);
+        const fb = buildFallbackAnalysis(features, problem, integrations, locale);
+        br = fb.br;
+        requirements = fb.requirements;
+      }
+    } else {
+      const fb = buildFallbackAnalysis(features, problem, integrations, locale);
+      br = fb.br;
+      requirements = fb.requirements;
     }
 
-    // Call LLM
-    const { object: llmResult } = await generateObject({
-      model: openai('gpt-4o-mini'),
-      schema: CalculatorSchema,
-      prompt: `
-        You are a senior Business Analyst at UzTeam, an IT Business Automation company.
-        A potential client has described their product idea. 
-        Your task is to analyze the input, generate a concise and professional Business Requirements (BR) summary in ${locale === 'uz' ? 'Uzbek' : locale === 'ru' ? 'Russian' : 'English'}, and extract strict JSON metadata.
-
-        DO NOT include pricing or timelines in the BR text.
-        
-        <user_query>
-        Core Functionalities: ${features}
-        Problem Solved: ${problem}
-        Needed Integrations: ${integrations}
-        </user_query>
-      `,
-    });
-
-    const estimate = await calculateEstimate({
-      complexity: llmResult.complexity,
-      features: llmResult.features,
-      integrations: llmResult.integrations,
-      isRealtime: llmResult.isRealtime,
-      needsHighSecurity: llmResult.needsHighSecurity,
-    });
+    const estimate = await calculateEstimate(requirements);
 
     // Save to database
     const [insertData] = await db
@@ -137,9 +200,9 @@ export async function POST(req: Request) {
         rawInputFeatures: features,
         rawInputProblem: problem,
         rawInputIntegrations: integrations,
-        generatedBrText: llmResult.br_summary_text,
-        extractedTags: llmResult,
-        complexity: llmResult.complexity,
+        generatedBrText: br,
+        extractedTags: requirements,
+        complexity: requirements.complexity,
         minPrice: String(estimate.minPrice),
         maxPrice: String(estimate.maxPrice),
         estimatedDays: estimate.estimatedDays,
@@ -151,9 +214,9 @@ export async function POST(req: Request) {
       success: true,
       submission_id: insertData.id,
       tier1: {
-        br_summary: llmResult.br_summary_text,
-        complexity: llmResult.complexity
-      }
+        br_summary: br,
+        complexity: requirements.complexity,
+      },
     });
 
   } catch (error) {

@@ -246,7 +246,7 @@ export default function CalculatorWizard() {
             <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-2xl font-bold text-foreground md:text-3xl">{t('results_title')}</h2>
               <div className="w-fit rounded-full border border-border bg-muted px-3 py-1 text-sm text-muted-foreground">
-                {t('complexity')}: <span className="font-semibold text-foreground">{tier1Data.complexity}</span>
+                {t('complexity')}: <span className="font-semibold text-foreground">{t(`complexity_${tier1Data.complexity.toLowerCase()}` as 'complexity_low')}</span>
               </div>
             </div>
 

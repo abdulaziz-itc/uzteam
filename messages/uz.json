@@ -170,7 +170,10 @@
     "download_pdf": "Xulosani yuklab olish (PDF)",
     "disclaimer": "* UI/UX dizayn, QA va ishga tushirilgandan keyingi qo'llab-quvvatlash kirmaydi. Aniq taklif batafsil texnik suhbatdan keyin beriladi.",
     "t2_title": "So'rovingiz qabul qilindi!",
-    "t2_desc": "Emailingizga tasdiq xati yubordik. Jamoamiz talablaringizni ko'rib chiqib, bir ish kuni ichida aniq taklif bilan bog'lanadi."
+    "t2_desc": "Emailingizga tasdiq xati yubordik. Jamoamiz talablaringizni ko'rib chiqib, bir ish kuni ichida aniq taklif bilan bog'lanadi.",
+    "complexity_low": "Past",
+    "complexity_medium": "O'rtacha",
+    "complexity_high": "Yuqori"
   },
   "Hero": {
     "email_placeholder": "Email manzilingiz",
