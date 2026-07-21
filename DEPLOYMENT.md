@@ -84,14 +84,30 @@ EOF
 
 Keyin GitHub'da **Actions → Build & Deploy → Run workflow** (yoki istalgan push).
 
-## 2. Avto-deploy (GitHub Actions)
+## 2. Avto-deploy — TO'LIQ AVTOMATIK (cron polling)
 
-`main`ga har push → `.github/workflows/deploy.yml`:
-1. CI: `npm ci` → lint → `next build` (standalone) → `deploy.tar.gz` (~12 MB)
-2. `scp` bilan serverga yuklaydi
-3. SSH: eski release tozalanadi (`.env.local`, `tmp/`, `logs/` saqlanadi) → arxiv ochiladi
-4. `psql`: sxema (faqat birinchi marta) + seed (idempotent)
-5. Passenger restart: `touch tmp/restart.txt`
+ahost tashqi SSH'ni yopgani uchun teskari model ishlaydi: **server o'zi
+GitHub'ni tekshiradi**.
+
+- `main`ga push → Actions build qilib `deploy.tar.gz`ni **"latest" Release**ga chiqaradi
+- Serverdagi **cron** (5 daqiqada bir) `scripts/auto-deploy.sh`ni GitHub raw'dan
+  olib ishga tushiradi: Release ETag o'zgargan bo'lsa — yuklab oladi, ochadi,
+  `activate.sh` (migratsiya + seed + restart) ni bajaradi
+
+### Cron'ni bir marta sozlash (cPanel → Cron Jobs)
+
+- **Minute**: `*/5`, qolganlari `*`
+- **Command**:
+
+```
+curl -sL https://raw.githubusercontent.com/abdulaziz-itc/uzteam/main/scripts/auto-deploy.sh | /bin/bash >> /home/uzteamuz/logs/deploy.log 2>&1
+```
+
+Shu bilan tamom — bundan keyin har push ~8 daqiqa ichida (3 min build + 5 min cron)
+saytga o'zi chiqadi. Jurnal: `~/logs/deploy.log`.
+
+> SSH orqali variant ham workflow'da saqlangan (`continue-on-error`) — ahost
+> SSH'ni ochsa, push'дан keyin darhol deploy ham ishlay boshlaydi.
 
 ## 3. DB migratsiyalar (prod)
 
