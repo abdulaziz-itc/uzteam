@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import HeroIllustration from './hero-illustration';
@@ -10,6 +10,7 @@ import HeroIllustration from './hero-illustration';
 export default function Hero() {
   const t = useTranslations('Index');
   const h = useTranslations('Hero');
+  const locale = useLocale();
 
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
@@ -26,6 +27,7 @@ export default function Hero() {
           name: email.split('@')[0],
           email,
           message: 'Hero email signup',
+          locale,
         }),
       });
       setStatus('success');

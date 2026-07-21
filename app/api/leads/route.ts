@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { leads } from '@/lib/db/schema';
+import { sendRequestReceivedEmail } from '@/lib/mailer';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, company, message } = await req.json();
+    const { name, email, phone, company, message, locale } = await req.json();
 
     if (!name || (!email && !phone)) {
       return NextResponse.json(
@@ -23,6 +24,11 @@ export async function POST(req: Request) {
       message: message ? String(message).slice(0, 5000) : null,
       source: 'contact_form',
     });
+
+    // Fire-and-forget acknowledgement — never blocks or fails the response.
+    if (email) {
+      void sendRequestReceivedEmail({ to: String(email), name: String(name), locale });
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Send, CheckCircle2 } from 'lucide-react';
 
 const inputCls =
@@ -9,6 +9,7 @@ const inputCls =
 
 export default function ContactForm() {
   const t = useTranslations('ContactPage');
+  const locale = useLocale();
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
@@ -22,7 +23,7 @@ export default function ContactForm() {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, locale }),
       });
       setStatus(res.ok ? 'success' : 'error');
     } catch {

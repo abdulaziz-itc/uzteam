@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
-import { Lock, Download } from 'lucide-react';
+import { Lock, CheckCircle2, Clock } from 'lucide-react';
 
 const INTEGRATION_OPTIONS = [
   'Payment Systems (Stripe, Payme, Click)',
@@ -23,7 +23,7 @@ const ghostBtn =
   'rounded-xl border border-border bg-background px-6 py-3 font-medium text-foreground transition-colors hover:bg-muted';
 
 interface Tier1 { br_summary: string; complexity: string }
-interface Tier2 { min_price: number; max_price: number; estimated_days: number; pdf_url: string }
+interface Tier2 { estimated_days: number }
 
 export default function CalculatorWizard() {
   const locale = useLocale();
@@ -281,29 +281,16 @@ export default function CalculatorWizard() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="grid grid-cols-1 gap-5 md:grid-cols-2"
+                className="flex flex-col items-center rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-8 text-center"
               >
-                <div className="rounded-xl border border-border bg-muted/40 p-6">
-                  <h3 className="mb-2 text-sm text-muted-foreground">{t('cost_label')}</h3>
-                  <div className="mb-2 text-3xl font-bold text-foreground md:text-4xl">
-                    ${Number(tier2Data.min_price).toLocaleString()} – ${Number(tier2Data.max_price).toLocaleString()}+
-                  </div>
-                  <p className="mt-4 text-xs text-muted-foreground">{t('disclaimer')}</p>
-                </div>
-
-                <div className="flex flex-col justify-center rounded-xl border border-border bg-muted/40 p-6">
-                  <h3 className="mb-2 text-sm text-muted-foreground">{t('timeline_label')}</h3>
-                  <div className="mb-6 text-3xl font-bold text-foreground">
-                    ~{Math.max(10, tier2Data.estimated_days)} {t('days')}
-                  </div>
-                  <a
-                    href={tier2Data.pdf_url}
-                    target="_blank"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                  >
-                    <Download className="h-4 w-4" />
-                    {t('download_pdf')}
-                  </a>
+                <CheckCircle2 className="mb-4 h-12 w-12 text-emerald-500" />
+                <h3 className="mb-2 text-xl font-bold text-foreground">{t('t2_title')}</h3>
+                <p className="mb-6 max-w-md text-sm leading-relaxed text-muted-foreground">
+                  {t('t2_desc')}
+                </p>
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm text-foreground">
+                  <Clock className="h-4 w-4 text-primary" />
+                  {t('timeline_label')}: <b>~{Math.max(10, tier2Data.estimated_days)} {t('days')}</b>
                 </div>
               </motion.div>
             )}

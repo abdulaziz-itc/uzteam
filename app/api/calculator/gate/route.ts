@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { calculatorSubmissions, leads } from '@/lib/db/schema';
+import { sendRequestReceivedEmail } from '@/lib/mailer';
 
 export const runtime = 'nodejs';
 
@@ -25,15 +26,10 @@ export async function POST(req: Request) {
     }
 
     if (subData.leadId) {
-      // Already unlocked
+      // Already unlocked. Prices stay server-side (admin only).
       return NextResponse.json({
         success: true,
-        tier2: {
-          min_price: subData.minPrice,
-          max_price: subData.maxPrice,
-          estimated_days: subData.estimatedDays,
-          pdf_url: subData.pdfUrl,
-        },
+        tier2: { estimated_days: subData.estimatedDays },
       });
     }
 
@@ -58,15 +54,17 @@ export async function POST(req: Request) {
       .set({ leadId: leadData.id, pdfUrl: mockPdfUrl })
       .where(eq(calculatorSubmissions.id, submission_id));
 
-    // Return the unlocked data
+    // Fire-and-forget acknowledgement email to the client.
+    void sendRequestReceivedEmail({
+      to: String(email),
+      name: String(name),
+      locale: subData.locale ?? undefined,
+    });
+
+    // Return the confirmation data. Prices stay server-side (admin only).
     return NextResponse.json({
       success: true,
-      tier2: {
-        min_price: subData.minPrice,
-        max_price: subData.maxPrice,
-        estimated_days: subData.estimatedDays,
-        pdf_url: mockPdfUrl,
-      },
+      tier2: { estimated_days: subData.estimatedDays },
     });
   } catch (error) {
     console.error('Gate API Error:', error);
