@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
-import { LayoutDashboard, FileText, Users, Briefcase, Settings, LogOut, Menu, Calculator, X } from 'lucide-react';
+import { LayoutDashboard, FileText, Users, Briefcase, Settings, LogOut, Menu, Calculator, X, MessageSquare } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '@/components/theme-toggle';
 
@@ -29,6 +29,7 @@ export default function AdminLayout({
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'News / Blog', href: '/admin/blog', icon: FileText },
+    { name: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare },
     { name: 'Team', href: '/admin/team', icon: Users },
     { name: 'Portfolio', href: '/admin/portfolio', icon: Briefcase },
     { name: 'Services', href: '/admin/services', icon: Settings },

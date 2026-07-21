@@ -206,7 +206,20 @@ export const calculatorSubmissions = pgTable('calculator_submissions', {
 });
 
 // ─────────────────────────────────────────────────────────────
-// 11. Calculator rate limits
+// 11. Testimonials (visitor-submitted, admin-moderated)
+// ─────────────────────────────────────────────────────────────
+export const testimonials = pgTable('testimonials', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 255 }).notNull(),
+  position: varchar('position', { length: 255 }),
+  message: text('message').notNull(),
+  locale: varchar('locale', { length: 10 }).default('uz'),
+  isApproved: boolean('is_approved').default(false).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ─────────────────────────────────────────────────────────────
+// 12. Calculator rate limits
 // ─────────────────────────────────────────────────────────────
 export const calculatorRateLimits = pgTable('calculator_rate_limits', {
   ipHash: varchar('ip_hash', { length: 255 }).primaryKey(),

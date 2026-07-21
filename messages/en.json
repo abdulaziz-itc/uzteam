@@ -210,9 +210,15 @@
   },
   "Testimonial": {
     "heading": "What clients say",
-    "quote": "UzTeam rebuilt our order workflow from spreadsheets into a single system. The team now processes twice the volume with fewer mistakes — and we finally see real numbers every morning.",
-    "author": "Aziz Rahimov",
-    "role": "Operations director, distribution company"
+    "empty": "Be the first to share your experience of working with us.",
+    "leave_btn": "Leave a review",
+    "form_name": "Your name",
+    "form_position": "Position / company (optional)",
+    "form_message": "Your review (min 10 characters)",
+    "form_submit": "Submit review",
+    "form_sending": "Sending…",
+    "form_success": "Thank you! Your review will appear on the site after moderation.",
+    "form_error": "Something went wrong. Please try again."
   },
   "CTABand": {
     "heading": "Have a process that eats your team's time?",

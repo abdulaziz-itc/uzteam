@@ -210,9 +210,15 @@
   },
   "Testimonial": {
     "heading": "Mijozlar fikri",
-    "quote": "UzTeam buyurtma jarayonimizni jadvallardan yagona tizimga o'tkazdi. Jamoa endi ikki barobar hajmni kamroq xato bilan qayta ishlaydi — va nihoyat har kuni ertalab haqiqiy raqamlarni ko'ramiz.",
-    "author": "Aziz Rahimov",
-    "role": "Operatsion direktor, distributsiya kompaniyasi"
+    "empty": "Biz bilan ishlash tajribangizni birinchi bo'lib ulashing.",
+    "leave_btn": "Fikr qoldirish",
+    "form_name": "Ismingiz",
+    "form_position": "Lavozim / kompaniya (ixtiyoriy)",
+    "form_message": "Fikringiz (kamida 10 belgi)",
+    "form_submit": "Fikrni yuborish",
+    "form_sending": "Yuborilmoqda…",
+    "form_success": "Rahmat! Fikringiz moderatsiyadan so'ng saytda ko'rinadi.",
+    "form_error": "Xatolik yuz berdi. Qayta urinib ko'ring."
   },
   "CTABand": {
     "heading": "Jamoangiz vaqtini yeb qo'yayotgan jarayon bormi?",
