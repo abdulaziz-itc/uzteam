@@ -15,22 +15,35 @@ import nodemailer from 'nodemailer';
  * so lead capture never fails because of email issues.
  */
 
-let cached: nodemailer.Transporter | null = null;
+let cachedSmtp: nodemailer.Transporter | null = null;
+let cachedSendmail: nodemailer.Transporter | null = null;
 
-function getTransporter(): nodemailer.Transporter | null {
+function getSmtpTransporter(): nodemailer.Transporter | null {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
-  if (cached) return cached;
+  if (cachedSmtp) return cachedSmtp;
 
   const port = Number(SMTP_PORT || 465);
-  cached = nodemailer.createTransport({
+  cachedSmtp = nodemailer.createTransport({
     host: SMTP_HOST,
     port,
     secure: port === 465,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
     connectionTimeout: 10_000,
   });
-  return cached;
+  return cachedSmtp;
+}
+
+// cPanel/Exim fallback: inject via the local sendmail binary — no auth or
+// relay rules apply to local injection, and Exim DKIM-signs outgoing mail.
+function getSendmailTransporter(): nodemailer.Transporter | null {
+  if (cachedSendmail) return cachedSendmail;
+  cachedSendmail = nodemailer.createTransport({
+    sendmail: true,
+    newline: 'unix',
+    path: '/usr/sbin/sendmail',
+  });
+  return cachedSendmail;
 }
 
 const STRINGS = {
@@ -133,31 +146,44 @@ export async function sendRequestReceivedEmail(opts: {
   name: string;
   locale?: string;
 }): Promise<boolean> {
-  const transporter = getTransporter();
-  if (!transporter) {
-    console.warn('📭 SMTP not configured — acknowledgement email skipped for', opts.to);
-    return false;
-  }
-
   const locale: Locale = (['uz', 'ru', 'en'] as const).includes(opts.locale as Locale)
     ? (opts.locale as Locale)
     : 'uz';
   const s = STRINGS[locale];
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://uz-team.uz';
-  const from = process.env.MAIL_FROM || `UzTeam <${process.env.SMTP_USER}>`;
+  const from =
+    process.env.MAIL_FROM ||
+    `UzTeam <${process.env.SMTP_USER || 'no-reply@uz-team.uz'}>`;
 
+  const mail = {
+    from,
+    to: opts.to,
+    subject: s.subject,
+    html: buildHtml(opts.name, locale, siteUrl),
+    text: `${s.greeting(opts.name)}\n\n${s.body1}\n${s.body2}\n\n${siteUrl}`,
+  };
+
+  // 1) Try SMTP when configured.
+  const smtp = getSmtpTransporter();
+  if (smtp) {
+    try {
+      await smtp.sendMail(mail);
+      console.log('📬 Acknowledgement email sent (SMTP) to', opts.to);
+      return true;
+    } catch (err) {
+      console.error('📭 SMTP send failed, falling back to sendmail:', err);
+    }
+  }
+
+  // 2) Fallback: local sendmail (works on cPanel without auth/relay rules).
   try {
-    await transporter.sendMail({
-      from,
-      to: opts.to,
-      subject: s.subject,
-      html: buildHtml(opts.name, locale, siteUrl),
-      text: `${s.greeting(opts.name)}\n\n${s.body1}\n${s.body2}\n\n${siteUrl}`,
-    });
-    console.log('📬 Acknowledgement email sent to', opts.to);
+    const sendmail = getSendmailTransporter();
+    if (!sendmail) throw new Error('sendmail transport unavailable');
+    await sendmail.sendMail(mail);
+    console.log('📬 Acknowledgement email sent (sendmail) to', opts.to);
     return true;
   } catch (err) {
-    console.error('📭 Email send failed:', err);
+    console.error('📭 Email send failed (all transports):', err);
     return false;
   }
 }
